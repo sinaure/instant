@@ -1,0 +1,79 @@
+logging:
+  level:
+    org.springframework: ERROR
+    com.sinaure: DEBUG
+
+spring:
+  profiles:
+    active: dev
+  
+email: sinaure@gmail.com
+repository: github/sinaure 
+endpoint: https://data.rennesmetropole.fr/api/records/1.0/search/?dataset=export-api-parking-citedia   
+---
+spring:
+  profiles: dev
+  datasource: 
+    url: jdbc:postgresql://192.168.99.100:5432/sophia
+    username: Jpasdetemps
+    password: 65k
+    initialization-mode: always
+  jpa:
+    hibernate.ddl-auto: create 
+    properties: 
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        temp: 
+          use_jdbc_metadata_defaults: false
+  main:
+    banner-mode: 'off'        
+  rabbitmq: 
+    host: 192.168.99.100
+    port: 5772
+    username: guest
+    password: guest      
+---
+
+spring:
+  profiles: prod
+  datasource: 
+    url: jdbc:postgresql://sophia-pg:5432/sophia
+    username: Jpasdetemps
+    password: 65k
+    initialization-mode: always
+  jpa:
+    hibernate.ddl-auto: create 
+    properties: 
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        temp: 
+          use_jdbc_metadata_defaults: false
+  main:
+    banner-mode: 'off'        
+  rabbitmq: 
+    host: sophia-rabbitmq
+    port: 5672
+    username: Jpasdetemps
+    password: 65k      
+---
+
+spring:
+  profiles: test
+  datasource:
+    driver-class-name: org.h2.Driver 
+    url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
+    username: sa
+    password: sa
+    initialize: true
+  jpa:
+    hibernate.ddl-auto: create 
+    properties: 
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        temp: 
+          use_jdbc_metadata_defaults: false
+  rabbitmq: 
+    host: localhost
+    port: 5679
+    username: guest
+    password: guest       
