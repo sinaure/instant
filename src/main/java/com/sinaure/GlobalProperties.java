@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties // no prefix, root level.
 @ComponentScan("com.sinaure")
-@Import(value = { AsyncThreadMeasuresProducer.class })
+@Import(value = { AsyncThreadEndpointCheck.class })
 public class GlobalProperties {
 
     //thread-pool , relax binding

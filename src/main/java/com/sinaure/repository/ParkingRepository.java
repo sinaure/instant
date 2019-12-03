@@ -10,4 +10,5 @@ import com.sinaure.config.model.Parking;
 public interface ParkingRepository extends JpaRepository<Parking, Long> {
 	@Query("SELECT p FROM Parking p WHERE p.parking_name = ?1")
 	Parking findByName(String name);
+	
 }

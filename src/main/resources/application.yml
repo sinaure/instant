@@ -40,7 +40,7 @@ spring:
     hibernate.ddl-auto: create 
     properties: 
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.spatial.dialect.postgis.PostgisDialect
         temp: 
           use_jdbc_metadata_defaults: false
   main:

@@ -1,37 +1,54 @@
 package com.sinaure.service;
 
+import java.io.StringReader;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.sinaure.config.model.Client;
+import com.sinaure.config.model.InstantParking;
 import com.sinaure.config.model.Log;
 import com.sinaure.config.model.Parking;
 import com.sinaure.config.model.Rule;
 import com.sinaure.config.model.Slot;
+import com.sinaure.repository.InstantParkingRepository;
 import com.sinaure.repository.LogRepository;
 import com.sinaure.repository.ParkingRepository;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.PrecisionModel;
 
 @Component
 public class ParkingService {
 	
 	public static final Calendar tzUTC = Calendar.getInstance(TimeZone.getTimeZone("UTC"));  
+	private final static GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
 
 	@Autowired
     private LogRepository logRepository;
 	
 	@Autowired
     private ParkingRepository parkingRepository;
+	
+	@Autowired
+    private InstantParkingRepository instantParkingRepository;
 
 	public Boolean availableSlotFor(Client client, Parking parking) {
 		Slot s = parking.getSlots().stream().filter(
@@ -102,6 +119,26 @@ public class ParkingService {
             return parkingRepository.save(parking);
         }).orElse(null);
 		//return parkingRepository.save(parking);
+	}
+	
+	public List<InstantParking> extractParkingRecord(String object) {
+		JsonReader jsonReader = Json.createReader(new StringReader(object));
+		JsonObject obj = jsonReader.readObject();
+	    JsonArray array = obj.getJsonArray("records");
+	    List<InstantParking> out = new ArrayList<InstantParking>();
+	    for (javax.json.JsonValue record : array) {
+	    	InstantParking p = new InstantParking();
+	    	p.setMax(record.asJsonObject().getJsonObject("fields").getInt("max"));
+	    	p.setFree(record.asJsonObject().getJsonObject("fields").getInt("free"));
+	    	p.setName(record.asJsonObject().getJsonObject("fields").getString("key"));
+	    	double lat = Double.parseDouble(record.asJsonObject().getJsonObject("geometry").getJsonArray("coordinates").get(0).toString());
+            double lon = Double.parseDouble(record.asJsonObject().getJsonObject("geometry").getJsonArray("coordinates").get(1).toString());
+            Point point = geometryFactory.createPoint(new Coordinate(lat, lon));
+	    	p.setLocation(point);
+	    	out.add(p);
+	    }
+	    instantParkingRepository.saveAll(out);
+	    return out;
 	}
 	
 }
