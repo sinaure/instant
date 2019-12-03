@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 
 import javax.annotation.PreDestroy;
 
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +33,7 @@ public class AsyncThreadMeasuresProducer {
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> response  = restTemplate.getForEntity(globalProperties.getEndpoint(), String.class);
 		log.info(response.getBody());
-		if(cachedContent!=response.getBody()) {
+		if(!cachedContent.equalsIgnoreCase(response.getBody())) {
 			cachedContent = response.getBody();
 			log.info("content updated!");
 		}

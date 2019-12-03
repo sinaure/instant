@@ -1,22 +1,5 @@
 version: "3"
 services:
-  instant-rabbitmq:
-     image: rabbitmq:3.6.3-management
-     container_name: instant-rabbitmq
-     ports:
-        - "5772:5672"
-        - "5771:5671"
-        - "16672:15672"
-        - "16671:15671"
-     environment:
-      - RABBITMQ_USER=${RABBITMQ_USER}
-      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
-      - RABBITMQ_HOST=${RABBITMQ_HOST}
-     volumes:
-      - ./rabbitmq/init.sh:/init.sh 
-      - /var/lib/rabbitmq
-     command:
-      - rabbitmq-server 
 
   instant-spring:
     image: asinatra/instant:1.2.1

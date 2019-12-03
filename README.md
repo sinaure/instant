@@ -3,10 +3,16 @@
 * Clone the repository
 
 ```
-git clone https://github.com/sinaure/sophiaEparking.git
+git clone https://github.com/sinaure/instant.git
 ```
 
-* Run application using H2 db  (test and dev phase)
+* Add host alias in /etc/hosts file
+
+```
+192.168.99.100 instant-host
+```
+
+* Run application using H2 db  (test phase)
 
 ```
 mvn clean install
@@ -17,7 +23,8 @@ mvn spring-boot:run -Dspring-boot.run.profiles=test
 
 ```
 cd docker
-make run
+make run-dev
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 API accessible at : http://YOURDOCKERHOST:7788/parking
 

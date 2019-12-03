@@ -3,7 +3,6 @@ package com.sinaure.controller;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,20 +13,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sinaure.Application;
 import com.sinaure.config.model.Client;
 import com.sinaure.config.model.Parking;
 import com.sinaure.config.model.Rule;
 import com.sinaure.config.model.Slot;
-import com.sinaure.listener.FirstListener;
 import com.sinaure.repository.ParkingRepository;
 import com.sinaure.service.ParkingService;
 
 @RestController
 @RequestMapping("parking")
 public class ParkingController {
-		@Autowired
-		private RabbitTemplate rabbitTemplate;
 		@Autowired
 	    private ParkingRepository parkingRepository;
 		@Autowired
