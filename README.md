@@ -1,3 +1,13 @@
+# Technology stack used
+
+AMQP RABBITMQ
+Typescript - NODEJS client
+Spring Boot
+Maven
+Timescaledb
+Postgis
+Docker
+
 # Quick start
 
 * Clone the repository
@@ -12,80 +22,56 @@ git clone https://github.com/sinaure/instant.git
 192.168.99.100 instant-host
 ```
 
-* Run application using H2 db  (test phase)
-
-```
-mvn clean install
-mvn spring-boot:run -Dspring-boot.run.profiles=test
-```
-
 * start the app in dev mode (qualification to production phase):
 
 ```
-cd docker
-make run-dev
-mvn spring-boot:run -Dspring-boot.run.profiles=dev
-```
-API accessible at : http://YOURDOCKERHOST:7788/parking
-
-* build app and upload to docker hub :
-
-```
 mvn clean install
-cd docker
-make build push
+cd docker 
+make build run-dev
+mvn spring-boot:run 
 ```
 
-# After app bootstrap (use H2 conf for below examples)
+* check database has been properly set up:
 
-Fixtures are loaded at application bootstrap are defined in data.sql file
+```
+CREATE EXTENSION IF NOT EXISTS postgis;
+SELECT create_hypertable('instant_parking', 'observed_at', if_not_exists => TRUE);
+```
+Working with hypertables can help us to get insight and analytics on parking usage stats
+
+
 
 
 # Demo
-get all the parkings : their slots are all marked as availables and no car plate is marked as occupied.
 
-* list all parkings
+REST API accessible at : http://localhost:8080/parking
 
-```
-curl -g -X GET http://localhost:8080/parking
+After the App is bootstrapped every 1 minute data are fetched from  
+https://data.rennesmetropole.fr/explore/dataset/export-api-parking-citedia/api/
 
-[{"id":1,"parking_name":"saint philippe","slots":[{"id":1,"slot_type":"standard","available":true,"plaque":null,"rule":{"id":1,"fix":10.00,"variable":2.70}},{"id":2,"slot_type":"standard","available":true,"plaque":null,"rule":{"id":1,"fix":10.00,"variable":2.70}},{"id":3,"slot_type":"standard","available":true,"plaque":null,"rule":{"id":1,"fix":10.00,"variable":2.70}},{"id":4,"slot_type":"standard","available":true,"plaque":null,"rule":{"id":1,"fix":10.00,"variable":2.70}},{"id":5,"slot_type":"20kw","available":true,"plaque":null,"rule":{"id":1,"fix":10.00,"variable":2.70}},{"id":6,"slot_type":"20kw","available":true,"plaque":null,"rule":{"id":1,"fix":10.00,"variable":2.70}},{"id":7,"slot_type":"20kw","available":true,"plaque":null,"rule":{"id":1,"fix":10.00,"variable":2.70}},{"id":8,"slot_type":"20kw","available":true,"plaque":null,"rule":{"id":1,"fix":10.00,"variable":2.70}},{"id":9,"slot_type":"20kw","available":true,"plaque":null,"rule":{"id":1,"fix":10.00,"variable":2.70}},{"id":10,"slot_type":"20kw","available":true,"plaque":null,"rule":{"id":1,"fix":10.00,"variable":2.70}}]}]
-```
+Every 1 min the Scheduler check that the retrieved object has changed and push a payload via AMQP protocol to message broker RabbitMQ
 
-* check availability for a Client with a Standard car --> 4 slots availables
-
-```
-curl -g -X POST http://localhost:8080/parking/1/checkavailability -H "Content-Type: application/json" -d '{ "plaque" : "FFT6568J", "carType" : "standard" }'
-
-[{"id":1,"slot_type":"standard","available":true,"plaque":null,"rule":{"id":1,"fix":10.00,"variable":2.70}},{"id":2,"slot_type":"standard","available":true,"plaque":null,"rule":{"id":1,"fix":10.00,"variable":2.70}},{"id":3,"slot_type":"standard","available":true,"plaque":null,"rule":{"id":1,"fix":10.00,"variable":2.70}},{"id":4,"slot_type":"standard","available":true,"plaque":null,"rule":{"id":1,"fix":10.00,"variable":2.70}}]
+Endpoints are:
+  
+* http://localhost:8080/parking/instant/Arsenal 
 
 ```
-
-* Park a car --> this create a Log with a startDate that is later used for billing
-
-```
-curl -g -X POST http://localhost:8080/parking/1/park -H "Content-Type: application/json" -d '{ "plaque" : "FFT6568J", "carType" : "standard" }'
-
-```
-After the car has been parked we can see that the slot1 has been marked as notAvailable and the car plate has been added. (http://localhost:8080/parking/1)
-If we check again the availability this has decreased to 3 free spots
-
-* Bill client 
-
-```
-curl -g -X POST http://localhost:8080/parking/1/bill -H "Content-Type: application/json" -d '{ "plaque" : "FFT6568J", "carType" : "standard" }'
-
+{"observedAt":"2019-12-04T14:09:57.690Z","free":261,"max":605,"name":"Arsenal","location":{"type":"Point","coordinates":[-1.6847819587,48.1043058108]}}
 ```
 
-* update pricing rule for a parking 
+This endpoint provide the last provided info by Parking name and can be used mainly for debug purposes.
 
-```
-curl -g -X POST http://localhost:8080/parking/1/updateRule -H "Content-Type: application/json" -d '{ "fix" : 2.2, "variable" : 1.5 }'
+* http://localhost:8080/parking/instant/Arsenal/temporal?start=2019-12-03T14:15:56.893Z&end=2019-12-05T14:15:56.893Z 
 
-```
 
-# Notes
-For a fully reactive behaviour a message broker (es. rabbitmq) would be suitable to easily handle the CAR-IN / CAR-OUT events.
-If you will hire me I would be pleased to implement it!
 
-https://github.com/ElderByte-/spring-boot-starter-qpid-embedded
+This endpoint will provide insight for revenue management and stats on parking usage 
+
+
+# Bonus
+
+a ui client has been set up under docker/subscriber. Is a very simple example of amqp client based on NODEJS. This technology is well suited for UI applications (es. a Map to show the points).
+The data are feeded to the client UI application in Real Time. 
+
+
+

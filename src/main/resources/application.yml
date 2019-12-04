@@ -19,14 +19,20 @@ spring:
     password: instant
     initialization-mode: always
   jpa:
-    hibernate.ddl-auto: create-drop 
+    hibernate.ddl-auto: create 
     properties: 
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.spatial.dialect.postgis.PostgisDialect
         temp: 
           use_jdbc_metadata_defaults: false
   main:
     banner-mode: 'off'        
+
+rabbitmq: 
+    host: instant-host
+    port: 5672
+    username: hub-iot
+    password: hub-iot        
 ---
 
 spring:
@@ -45,6 +51,12 @@ spring:
           use_jdbc_metadata_defaults: false
   main:
     banner-mode: 'off'        
+
+rabbitmq: 
+    host: instant-host
+    port: 5672
+    username: hub-iot
+    password: hub-iot     
 ---
 
 spring:
@@ -62,3 +74,9 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
         temp: 
           use_jdbc_metadata_defaults: false
+
+rabbitmq: 
+    host: instant-host
+    port: 5672
+    username: hub-iot
+    password: hub-iot          

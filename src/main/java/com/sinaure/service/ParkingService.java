@@ -2,6 +2,7 @@ package com.sinaure.service;
 
 import java.io.StringReader;
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
@@ -128,17 +130,32 @@ public class ParkingService {
 	    List<InstantParking> out = new ArrayList<InstantParking>();
 	    for (javax.json.JsonValue record : array) {
 	    	InstantParking p = new InstantParking();
-	    	p.setMax(record.asJsonObject().getJsonObject("fields").getInt("max"));
-	    	p.setFree(record.asJsonObject().getJsonObject("fields").getInt("free"));
+	    	if(record.asJsonObject().getJsonObject("fields").containsKey("max") && record.asJsonObject().getJsonObject("fields").containsKey("free")) {
+	    		p.setMax(record.asJsonObject().getJsonObject("fields").getInt("max"));
+		    	p.setFree(record.asJsonObject().getJsonObject("fields").getInt("free"));
+	    	}
 	    	p.setName(record.asJsonObject().getJsonObject("fields").getString("key"));
 	    	double lat = Double.parseDouble(record.asJsonObject().getJsonObject("geometry").getJsonArray("coordinates").get(0).toString());
             double lon = Double.parseDouble(record.asJsonObject().getJsonObject("geometry").getJsonArray("coordinates").get(1).toString());
             Point point = geometryFactory.createPoint(new Coordinate(lat, lon));
 	    	p.setLocation(point);
+	    	Date o = new Date(System.currentTimeMillis());
+	    	p.setObservedAt(o);
 	    	out.add(p);
 	    }
 	    instantParkingRepository.saveAll(out);
 	    return out;
+	}
+	
+	public InstantParking getLastInstantParkingByName(String name){
+		List <InstantParking> parkings = instantParkingRepository.findByName(name);
+		parkings = parkings.stream().sorted(Comparator.comparing(InstantParking::getObservedAt)).collect(Collectors.toList());
+		return parkings.stream().findFirst().orElse(null);
+	}
+	
+	public List<InstantParking> getInstantParkingByName(String name, Timestamp start, Timestamp end){
+		List <InstantParking> parkings = instantParkingRepository.findByNameBetween(name, start, end);
+		return parkings.stream().sorted(Comparator.comparing(InstantParking::getObservedAt)).collect(Collectors.toList());
 	}
 	
 }

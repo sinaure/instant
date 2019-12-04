@@ -2,7 +2,6 @@ package com.sinaure.test;
 
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
@@ -16,12 +15,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.amqp.rabbit.junit.RabbitAvailable;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import com.sinaure.config.model.CarType;
 import com.sinaure.config.model.Client;
@@ -32,9 +31,6 @@ import com.sinaure.config.model.Slot;
 import com.sinaure.repository.LogRepository;
 import com.sinaure.repository.ParkingRepository;
 import com.sinaure.service.ParkingService;
-
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
