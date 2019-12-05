@@ -1,12 +1,12 @@
 # Technology stack used
 
-AMQP RABBITMQ
-Typescript - NODEJS client
-Spring Boot
-Maven
-Timescaledb
-Postgis
-Docker
+* AMQP RABBITMQ
+* Typescript - NODEJS client
+* Spring Boot
+* Maven
+* Timescaledb
+* Postgis
+* Docker
 
 # Quick start
 
