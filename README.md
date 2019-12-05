@@ -50,6 +50,7 @@ After the App is bootstrapped every 1 minute data are fetched from
 https://data.rennesmetropole.fr/explore/dataset/export-api-parking-citedia/api/
 
 Every 1 min the Scheduler check that the retrieved object has changed and push a payload via AMQP protocol to message broker RabbitMQ
+Retrieved data are also stored in Timescqledb/Postgis database to have an history of changements. 
 
 Endpoints are:
 
