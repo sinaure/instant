@@ -73,9 +73,9 @@ This endpoint will provide insight for revenue management and stats on parking u
 a ui client has been set up under docker/subscriber. Is a very simple example of amqp client based on NODEJS. This technology is well suited for UI applications (es. a Map to show the points).
 The data are feeded to the client UI application in Real Time. 
 
+```
 cd docker/subscriber
-
 npm start prod
-
+```
 
 
