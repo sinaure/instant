@@ -22,7 +22,7 @@ git clone https://github.com/sinaure/instant.git
 192.168.99.100 instant-host
 ```
 
-* start the app in dev mode (qualification to production phase):
+* start the app in dev mode:
 
 ```
 mvn clean install
