@@ -47,7 +47,7 @@ public class ParkingService {
 	    		p.setMax(record.asJsonObject().getJsonObject("fields").getInt("max"));
 		    	p.setFree(record.asJsonObject().getJsonObject("fields").getInt("free"));
 	    	}
-	    	p.setName(record.asJsonObject().getJsonObject("fields").getString("key"));
+	    	p.setName(record.asJsonObject().getJsonObject("fields").getString("key").toLowerCase());
 	    	double lat = Double.parseDouble(record.asJsonObject().getJsonObject("geometry").getJsonArray("coordinates").get(0).toString());
             double lon = Double.parseDouble(record.asJsonObject().getJsonObject("geometry").getJsonArray("coordinates").get(1).toString());
             Point point = geometryFactory.createPoint(new Coordinate(lat, lon));
