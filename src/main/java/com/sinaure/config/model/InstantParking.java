@@ -1,5 +1,6 @@
 package com.sinaure.config.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -13,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.vividsolutions.jts.geom.Point;
 @Entity
 @Table(name = "instantParking")
-public class InstantParking {
+public class InstantParking implements Serializable{
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SS'Z'")
 	private Date observedAt;
 	public Date getObservedAt() {
