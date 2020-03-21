@@ -1,0 +1,80 @@
+logging:
+  level:
+    org.springframework: ERROR
+    com.sinaure: DEBUG
+
+spring:
+  profiles:
+    active: dev
+  
+email: sinaure@gmail.com
+repository: github/sinaure 
+endpoint: https://data.rennesmetropole.fr/api/records/1.0/search/?dataset=export-api-parking-citedia   
+---
+spring:
+  profiles: dev
+  datasource: 
+    url: jdbc:postgresql://192.168.99.100:5432/geodata
+    username: postgres
+    password: 7LOwDNnebyCX
+  jpa:
+    hibernate.ddl-auto: none 
+    properties: 
+      hibernate:
+        dialect: com.sinaure.types.CustomPostgisDialect
+        temp: 
+          use_jdbc_metadata_defaults: false
+  main:
+    banner-mode: 'off'        
+
+rabbitmq: 
+    host: 192.168.99.100
+    port: 5672
+    username: hub-iot
+    password: hub-iot        
+---
+
+spring:
+  profiles: prod
+  datasource: 
+    url: jdbc:postgresql://instant-pg:5432/instant
+    username: instant
+    password: instant
+  jpa:
+    hibernate.ddl-auto: create 
+    properties: 
+      hibernate:
+        dialect: org.hibernate.spatial.dialect.postgis.PostgisDialect
+        temp: 
+          use_jdbc_metadata_defaults: false
+  main:
+    banner-mode: 'off'        
+
+rabbitmq: 
+    host: instant-host
+    port: 5672
+    username: hub-iot
+    password: hub-iot     
+---
+
+spring:
+  profiles: test
+  datasource:
+    driver-class-name: org.h2.Driver 
+    url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
+    username: sa
+    password: sa
+    initialize: true
+  jpa:
+    hibernate.ddl-auto: create 
+    properties: 
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        temp: 
+          use_jdbc_metadata_defaults: false
+
+rabbitmq: 
+    host: instant-host
+    port: 5672
+    username: hub-iot
+    password: hub-iot          

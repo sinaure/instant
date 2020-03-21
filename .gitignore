@@ -1,0 +1,8 @@
+/target/
+/bin/
+node_modules
+data/shp
+data/csv
+.settings
+.project
+.sql
