@@ -14,9 +14,9 @@ endpoint: https://data.rennesmetropole.fr/api/records/1.0/search/?dataset=export
 spring:
   profiles: dev
   datasource: 
-    url: jdbc:postgresql://instant-host:5432/instant
+    url: jdbc:postgresql://192.168.99.100:5432/geodata
     username: instant
-    password: instant
+    password: 6pJabioJmKS8
   jpa:
     hibernate.ddl-auto: create 
     properties: 
@@ -28,7 +28,7 @@ spring:
     banner-mode: 'off'        
 
 rabbitmq: 
-    host: instant-host
+    host: 192.168.99.100
     port: 5672
     username: hub-iot
     password: hub-iot        
@@ -37,7 +37,7 @@ rabbitmq:
 spring:
   profiles: prod
   datasource: 
-    url: jdbc:postgresql://instant-pg:5432/instant
+    url: jdbc:postgresql://192.168.99.100:5432/instant
     username: instant
     password: instant
   jpa:
