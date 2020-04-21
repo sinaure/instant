@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sinaure.config.model.InstantParking;
+import com.sinaure.config.InstantParking;
 import com.sinaure.service.ParkingService;
 
 @RestController

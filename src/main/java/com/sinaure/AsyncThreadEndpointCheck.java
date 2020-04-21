@@ -37,7 +37,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import com.sinaure.config.model.InstantParking;
+import com.sinaure.config.InstantParking;
 import com.sinaure.service.ParkingService;
 import com.vividsolutions.jts.geom.Point;
 

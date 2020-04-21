@@ -11,4 +11,3 @@ psql -d geodata -U postgres <<-EOSQL
 	    CREATE EXTENSION postgis;
 	    SELECT PostGIS_full_version();
 EOSQL
-

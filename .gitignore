@@ -3,4 +3,10 @@
 node_modules
 .settings
 .project
-
+.idea
+.iml
+.xz
+docker/shared_dir/archives
+docker/shared_dir/pginsert/*.sql
+docker/shared_dir/*.sql
+docker/shared_dir/shp

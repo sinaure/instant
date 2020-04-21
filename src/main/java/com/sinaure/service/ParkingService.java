@@ -18,7 +18,7 @@ import javax.json.JsonReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.sinaure.config.model.InstantParking;
+import com.sinaure.config.InstantParking;
 import com.sinaure.repository.InstantParkingRepository;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
