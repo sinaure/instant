@@ -14,11 +14,11 @@ endpoint: https://data.rennesmetropole.fr/api/records/1.0/search/?dataset=export
 spring:
   profiles: dev
   datasource: 
-    url: jdbc:postgresql://192.168.99.100:5432/geodata
+    url: jdbc:postgresql://${INSTANT_HOST}:5432/geodata
     username: instant
     password: 6pJabioJmKS8
   jpa:
-    hibernate.ddl-auto: create 
+    hibernate.ddl-auto: validate
     properties: 
       hibernate:
         dialect: org.hibernate.spatial.dialect.postgis.PostgisDialect
@@ -28,7 +28,7 @@ spring:
     banner-mode: 'off'        
 
 rabbitmq: 
-    host: 192.168.99.100
+    host: ${INSTANT_HOST}
     port: 5672
     username: hub-iot
     password: hub-iot        

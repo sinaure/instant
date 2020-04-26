@@ -70,6 +70,7 @@ psql -d $INSTANT_DB_DATABASE -U postgres <<-EOSQL
 	libtypbien character varying
 );
 COPY mutations FROM '/geo_data/shp/R93_Provence_Alpes_Cote_d_Azur/r93_mutation.csv' DELIMITERS ',' CSV HEADER;
+ALTER TABLE mutations OWNER TO instant
 EOSQL
 
 echo "insert shp dumped .sql files"
@@ -86,3 +87,17 @@ psql -d $INSTANT_DB_DATABASE -U postgres -f /geo_data/pginsert/import-parcelle_g
 psql -d $INSTANT_DB_DATABASE -U postgres -f /geo_data/pginsert/import-locmut.sql
 psql -d $INSTANT_DB_DATABASE -U postgres -f /geo_data/pginsert/import-parcelle_geompar.sql
 psql -d $INSTANT_DB_DATABASE -U postgres -f /geo_data/pginsert/import-mutation_geomparmut.sql
+
+psql -d $INSTANT_DB_DATABASE -U postgres <<-EOSQL
+  ALTER TABLE communes OWNER TO instant;
+  ALTER TABLE mutation_geomlocmut OWNER TO instant;
+  ALTER TABLE geomloc OWNER TO instant;
+  ALTER TABLE par OWNER TO instant;
+  ALTER TABLE parmut OWNER TO instant;
+  ALTER TABLE mutation_geompar OWNER TO instant;
+  ALTER TABLE parcelle_geomloc OWNER TO instant;
+  ALTER TABLE locmut OWNER TO instant;
+  ALTER TABLE parcelle_geompar OWNER TO instant;
+  ALTER TABLE mutation_geomparmut OWNER TO instant;
+
+EOSQL

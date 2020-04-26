@@ -1,11 +1,9 @@
-CREATE TABLE IF NOT EXISTS mutations_by_year ( aneemut integer,  transactions bigint,  totval float, mean_val float, CONSTRAINT mutations_by_year_pk PRIMARY KEY (aneemut));
-
 CREATE MATERIALIZED VIEW IF NOT EXISTS mutations_loc_vw AS SELECT
 t1.*,
 substr(t1.l_codinsee[1],3,3)::integer as code_com,
 ST_AsGeoJSON(ST_Transform(t2.geom,4326)) as point
 FROM   mutations  t1
-LEFT JOIN   mutations_geomlocmut t2 ON t1.idmutation = t2.idmutation::bigint
+LEFT JOIN   mutation_geomlocmut t2 ON t1.idmutation = t2.idmutation::bigint
 WITH NO DATA;
 
 REFRESH MATERIALIZED VIEW mutations_loc_vw;
@@ -15,8 +13,8 @@ t1.*,
 substr(t1.l_codinsee[1],3,3)::integer as code_com,
 ST_AsGeoJSON(ST_Transform(t3.geom,4326)) as geometry_parcel, ST_AsGeoJSON(ST_Transform(t4.geom,4326)) as geometry_parcel_mutation
 FROM   mutations  t1
-LEFT JOIN   mutations_geompar t3 ON t1.idmutation = t3.idmutation::bigint
-LEFT JOIN   mutations_geomparmut t4 ON t1.idmutation = t4.idmutation::bigint
+LEFT JOIN   mutation_geompar t3 ON t1.idmutation = t3.idmutation::bigint
+LEFT JOIN   mutation_geomparmut t4 ON t1.idmutation = t4.idmutation::bigint
 WITH NO DATA;
 
 REFRESH MATERIALIZED VIEW mutations_parcel_vw;
