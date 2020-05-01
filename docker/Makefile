@@ -26,6 +26,3 @@ stop:
 	docker-compose down 
 	docker stop docker-rabbitmq	 || true
 	docker rm docker-rabbitmq  || true
-import:
-    docker exec  -i -t osmworker /scripts/shp_to_sql.sh
-    docker exec  -i -t postgres /scripts/insert_data.sh
