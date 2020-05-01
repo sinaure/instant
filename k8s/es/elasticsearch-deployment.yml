@@ -1,0 +1,96 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: elasticsearch
+  name: elasticsearch
+  namespace: elk
+spec:
+  ports:
+  - port: 9300
+    protocol: TCP
+    targetPort: transport
+    name: "9300"
+  - port: 9200
+    protocol: TCP
+    targetPort: db
+    name: "9200"
+  selector:
+    app: elasticsearch
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elasticsearch
+  namespace: elk
+  labels:
+    app: elasticsearch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: elasticsearch
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+    spec:
+      initContainers:
+      - name: init-sysctl
+        image: busybox:1.27.2
+        command:
+        - sysctl
+        - -w
+        - vm.max_map_count=262144
+        securityContext:
+          privileged: true    
+      containers:
+#      - image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.4
+      - image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.5.1
+        name: elasticsearch
+        env:
+        - name: ES_JAVA_OPTS
+          value: -Xms8g -Xmx12g
+        - name: "discovery.type"
+          value: "single-node"
+        - name: "node.name"
+          value: "es01"
+        ports:
+        - containerPort: 9200
+          name: db
+          protocol: TCP
+        - containerPort: 9300
+          name: transport
+          protocol: TCP        
+        resources:
+          requests:
+            memory: "8G"
+            cpu: "2000m"
+          limits:
+            memory: "8G"
+            cpu: "2000m"
+        livenessProbe:
+          tcpSocket:
+            port: 9300
+          initialDelaySeconds: 120
+          periodSeconds: 10
+        volumeMounts:
+        - name: storage
+          mountPath: /usr/share/elasticsearch/data
+      volumes:
+        - name: storage
+          emptyDir: {}
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: elasticsearch-data-disk
+  namespace: elk
+spec:
+  volumeName: elasticsearch-data-disk
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10G

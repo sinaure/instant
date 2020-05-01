@@ -1,0 +1,6 @@
+<<<<<<< HEAD
+FROM timescale/timescaledb-postgis:latest-pg11
+=======
+FROM timescale/timescaledb-postgis:latest-pg10
+>>>>>>> 8f7b4b05de8eb7590067b55724eeddbd5a62ffea
+ADD ./init /docker-entrypoint-initdb.d/

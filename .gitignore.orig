@@ -3,6 +3,9 @@
 node_modules
 .settings
 .project
+<<<<<<< HEAD
+
+=======
 .idea
 .iml
 .xz
@@ -10,3 +13,4 @@ docker/shared_dir/archives
 docker/shared_dir/pginsert/*.sql
 docker/shared_dir/*.sql
 docker/shared_dir/shp
+>>>>>>> 8f7b4b05de8eb7590067b55724eeddbd5a62ffea

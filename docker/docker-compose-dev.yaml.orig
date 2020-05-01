@@ -1,0 +1,54 @@
+version: "3"
+services:
+<<<<<<< HEAD
+   postgres:
+=======
+  postgres:
+>>>>>>> 8f7b4b05de8eb7590067b55724eeddbd5a62ffea
+    container_name: postgres
+    restart: 'always'
+    build: './postgres'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+<<<<<<< HEAD
+      - "POSTGRES_MULTIPLE_DATABASES=${INSTANT_DB_DATABASE},${INSTANT_DB_USER},${INSTANT_DB_PASSWORD}"
+      # not sure it is really necessary but it does not break anything ...
+=======
+      - POSTGRES_MULTIPLE_DATABASES=${INSTANT_DB_DATABASE},${INSTANT_DB_USER},${INSTANT_DB_PASSWORD}
+      - INSTANT_DB_DATABASE=${INSTANT_DB_DATABASE}
+>>>>>>> 8f7b4b05de8eb7590067b55724eeddbd5a62ffea
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    ports:
+      - 5432:5432
+    volumes:
+      - /var/lib/postgresql/data
+      - ./postgres/data:/data
+<<<<<<< HEAD
+=======
+      - ./shared_dir:/geo_data
+      - ./postgres/scripts:/scripts
+    networks:
+      - default
+
+  osmworker:
+    container_name: osmworker
+    depends_on:
+      - postgres
+    build: './geospatial'
+    environment:
+      - INSTANT_DB_USER=${INSTANT_DB_USER}
+      - PGPASS=${INSTANT_DB_PASSWORD}
+      - INSTANT_DB_DATABASE=${INSTANT_DB_DATABASE}
+    volumes:
+      - ./shared_dir:/geo_data
+      - ./geospatial/scripts:/scripts
+    tty: true
+>>>>>>> 8f7b4b05de8eb7590067b55724eeddbd5a62ffea
+    networks:
+      - default
+
+networks:
+  default:
+    external:
+      name: instant
