@@ -87,10 +87,13 @@ Download https://cerema.app.box.com/v/dvfplus-opendata/folder/93294544543
 docker exec  -i -t osmworker /scripts/shp_to_sql.sh
 # Insert sql to postgres
 
-
-docker exec  -i -t postgres /scripts/insert_data.shdocker exec  -i -t postgres /scripts/insert_data.sh
+```
+docker exec -i -t osmworker /scripts/shp_to_sql.sh 
+docker exec -i -t postgres /scripts/insert_data.sh
 ```
 
 # Create views
+
+    
 
 # Create Nosql dumps via elasticsearch
