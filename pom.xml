@@ -17,6 +17,7 @@
 		<hibernate-spatial.version>5.3.7.Final</hibernate-spatial.version>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+		<spring.data.elk.version>3.2.7.RELEASE</spring.data.elk.version>
 
 	</properties>
 	<dependencyManagement>
@@ -61,6 +62,12 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-starter-amqp</artifactId>
 				<version>${spring-boot.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.springframework.data</groupId>
+				<artifactId>spring-data-elasticsearch</artifactId>
+				<version>${spring.data.elk.version}</version>
 			</dependency>
 
 			<!-- PostgreSQL -->
@@ -132,6 +139,11 @@
 				<groupId>com.fasterxml.jackson.datatype</groupId>
 				<artifactId>jackson-datatype-jsr310</artifactId>
 				<version>2.9.3</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>3.6</version>
 			</dependency>
 
 

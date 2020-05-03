@@ -1,0 +1,9 @@
+script.allowed_types: inline
+script.allowed_contexts: search
+
+node.data: true
+
+
+
+discovery.zen.minimum_master_nodes: 1
+

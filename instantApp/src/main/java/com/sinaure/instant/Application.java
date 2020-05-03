@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 @EnableJpaRepositories("com.sinaure.instant.repository")
 @ComponentScan( {
-		"com.sinaure.instant"
+		"com.sinaure.instant", "com.sinaure.instant.controller"
 })
 @EnableAutoConfiguration
 public class Application  {

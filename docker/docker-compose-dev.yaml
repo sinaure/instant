@@ -1,21 +1,63 @@
 version: "3"
 services:
+
    postgres:
-    container_name: postgres
-    restart: 'always'
-    build: './postgres'
-    environment:
+      container_name: postgres
+      restart: 'always'
+      build: './postgres'
+      environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - "POSTGRES_MULTIPLE_DATABASES=${INSTANT_DB_DATABASE},${INSTANT_DB_USER},${INSTANT_DB_PASSWORD}"
-      # not sure it is really necessary but it does not break anything ...
+      - POSTGRES_MULTIPLE_DATABASES=${INSTANT_DB_DATABASE},${INSTANT_DB_USER},${INSTANT_DB_PASSWORD}
+      - INSTANT_DB_DATABASE=${INSTANT_DB_DATABASE}
       - PGDATA=/var/lib/postgresql/data/pgdata
-    ports:
+      ports:
       - 5432:5432
-    volumes:
+      volumes:
       - /var/lib/postgresql/data
       - ./postgres/data:/data
+      - ./shared_dir:/geo_data
+      - ./postgres/scripts:/scripts
+      networks:
+      - default
+
+   osmworker:
+    container_name: osmworker
+    depends_on:
+      - postgres
+    build: './geospatial'
+    environment:
+      - INSTANT_DB_USER=${INSTANT_DB_USER}
+      - PGPASS=${INSTANT_DB_PASSWORD}
+      - INSTANT_DB_DATABASE=${INSTANT_DB_DATABASE}
+    volumes:
+      - ./shared_dir:/geo_data
+      - ./geospatial/scripts:/scripts
+    tty: true
     networks:
+      - default
+
+   elasticsearch:
+      image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+      container_name: elasticsearch
+      volumes:
+      - ./elasticsearch/config/jvm.options:/usr/share/elasticsearch/config/jvm.options
+      - ./elasticsearch/config/log4j2.properties:/usr/share/elasticsearch/config/log4j2.properties
+      environment:
+      - node.name=instant
+      - cluster.name=es-cluster
+      - node.master=true
+      - network.host=0.0.0.0
+      - transport.tcp.port=9300
+      - http.port=9200
+      - path.data=/es-data
+      - discovery.type=single-node
+      ports:
+      - "9200:9200"
+      - "9300:9300"
+      volumes:
+      - ./elasticsearch/data:/es-data
+      networks:
       - default
 
 networks:

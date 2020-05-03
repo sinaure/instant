@@ -27,6 +27,11 @@ spring:
   main:
     banner-mode: 'off'        
 
+db:
+      clustername : es-cluster
+      nodename : instant
+      host : ${INSTANT_HOST}
+      port : 9300 
 rabbitmq: 
     host: ${INSTANT_HOST}
     port: 5672

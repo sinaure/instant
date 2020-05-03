@@ -1,7 +1,8 @@
-/target/
+target/
 /bin/
 node_modules
 .settings
+.classpath
 .project
 .idea
 .iml
@@ -10,3 +11,4 @@ docker/shared_dir/archives
 docker/shared_dir/pginsert/*.sql
 docker/shared_dir/*.sql
 docker/shared_dir/shp
+docker/elasticsearch/data
